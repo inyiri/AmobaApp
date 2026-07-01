@@ -1,3 +1,0 @@
-#!/bin/sh
-APPDIR=`dirname $0`;
-java  -Xmx256M -cp "$APPDIR/src:$APPDIR/bin:/home/java/gwt-2.0.1/gwt-user.jar:/home/java/gwt-2.0.1/gwt-dev.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/www" "$@" org.cs.amoba.Amoba;
