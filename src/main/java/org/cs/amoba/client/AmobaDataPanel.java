@@ -73,7 +73,7 @@ public class AmobaDataPanel
         dataCtrls.setSpacing(10);
         dataCtrls.setStyleName("AmobaDataPanel");
 
-        amobaView.palyaPanel.add( dataCtrls );
+        amobaView.palyaPanel.insert( dataCtrls, 0 );
 
         dataCtrls.add(htmlCim);
 
