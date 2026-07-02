@@ -41,6 +41,11 @@
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.dominokit</groupId>
+            <artifactId>domino-ui</artifactId>
+            <version>1.0.7</version>
+        </dependency>
     </dependencies>
 
     <build>

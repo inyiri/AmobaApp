@@ -10,6 +10,9 @@
       <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
       <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+      <!-- Domino UI components (buttons, selects, text boxes).       -->
+      <inherits name='org.dominokit.domino.ui.DominoUI'/>
+
       <!-- Specify the app entry point class.                         -->
       <entry-point class='org.cs.amoba.client.Amoba'/>
 

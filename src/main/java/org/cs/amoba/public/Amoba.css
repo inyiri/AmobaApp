@@ -84,9 +84,19 @@
 .AmobaDataPanel
 {
     background-color: 	#E8E8E8 ;
+    margin-left: 10px;
+}
 
-
-
+/*
+ * Domino UI sets body { display:flex; flex-direction:column; }, which
+ * stretches the root panel (a plain table appended straight to <body>)
+ * to the full page width and pushes the form far right of the board.
+ * Opt back out of that stretch so the layout keeps its natural width.
+ */
+.amobaRoot
+{
+    align-self: flex-start;
+    width: auto;
 }
 
 #pc-template-img {

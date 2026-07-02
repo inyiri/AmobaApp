@@ -41,6 +41,7 @@ public class AmobaView extends Composite
 
         String base = GWT.getModuleBaseURL();
         palyaPanel = new HorizontalPanel();
+        palyaPanel.setStyleName("amobaRoot");
         flexTable = new FlexTable();
         flexTable.setCellPadding(0);
         flexTable.setCellSpacing(0);
