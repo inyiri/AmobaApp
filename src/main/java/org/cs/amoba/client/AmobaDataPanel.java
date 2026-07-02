@@ -5,10 +5,12 @@ package org.cs.amoba.client;
 //
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import org.cs.amoba.client.modell.*;
+import org.dominokit.domino.ui.button.Button;
+import org.dominokit.domino.ui.forms.Select;
+import org.dominokit.domino.ui.forms.SelectOption;
+import org.dominokit.domino.ui.forms.TextBox;
 
 public class AmobaDataPanel
 {
@@ -25,20 +27,20 @@ public class AmobaDataPanel
     FlowPanel startStop = new FlowPanel();
     FlowPanel jatekAllas = new FlowPanel();
 
-    Button btnStart = new Button("Start");
-    Button btnStop  = new Button("Stop");
-    Button btnNullaz  = new Button("Nulláz");
+    Button btnStart = Button.create("Start");
+    Button btnStop  = Button.create("Stop");
+    Button btnNullaz  = Button.create("Nulláz");
 
-    ListBox lbLFPiros = new ListBox();
-    ListBox lbLFZold  = new ListBox();
-    ListBox lbKezdo   = new ListBox();
+    Select<String> lbLFPiros = Select.create();
+    Select<String> lbLFZold  = Select.create();
+    Select<String> lbKezdo   = Select.create();
 
     Label lblAllasPiros = new Label("0");
     Label lblAllasZold = new Label("0");
     Label lblAllasKpont = new Label(" : ");
     Label lblHelytarto = new Label(" ");
 
-    TextBox tamadasFaktor = new TextBox();
+    TextBox tamadasFaktor = TextBox.create();
 
     final AmobaModell amobaModell = new AmobaModell();
     final AmobaView   amobaView = new AmobaView(this);
@@ -56,9 +58,9 @@ public class AmobaDataPanel
         labelKezdo.setStyleName("KezdoJatekos");
         lblTFakt.setStyleName("Szovegek");
         labelAllas.setStyleName("Szovegek");
-        lbLFPiros.setStyleName("PirosMesterLista");
-        lbLFZold.setStyleName("ZoldMesterLista");
-        lbKezdo.setStyleName("KezdoJatekosLista");
+        lbLFPiros.css("PirosMesterLista");
+        lbLFZold.css("ZoldMesterLista");
+        lbKezdo.css("KezdoJatekosLista");
         labelMsg.setStyleName("Szovegek");
 
         lblAllasPiros.setStyleName("JatekPontPiros");
@@ -75,26 +77,29 @@ public class AmobaDataPanel
 
         dataCtrls.add(htmlCim);
 
-        lbLFPiros.addItem("Egy ember", "E");
-        lbLFPiros.addItem("A Computer", "C");
+        lbLFPiros.appendChild(SelectOption.create("E", "Egy ember"));
+        lbLFPiros.appendChild(SelectOption.create("C", "A Computer"));
+        lbLFPiros.selectAt(0);
 
-        lbLFZold.addItem("Egy ember", "E");
-        lbLFZold.addItem("A Computer", "C");
+        lbLFZold.appendChild(SelectOption.create("E", "Egy ember"));
+        lbLFZold.appendChild(SelectOption.create("C", "A Computer"));
+        lbLFZold.selectAt(0);
 
-        lbKezdo.addItem("A nagy piros mester", "P");
-        lbKezdo.addItem("A nagy zöld mester", "Z");
+        lbKezdo.appendChild(SelectOption.create("P", "A nagy piros mester"));
+        lbKezdo.appendChild(SelectOption.create("Z", "A nagy zöld mester"));
+        lbKezdo.selectAt(0);
 
         dataCtrls.add(label1);
-        dataCtrls.add(lbLFPiros);
+        dataCtrls.add(new Elemental2Widget<>(lbLFPiros.element()));
         dataCtrls.add(label2);
-        dataCtrls.add(lbLFZold);
+        dataCtrls.add(new Elemental2Widget<>(lbLFZold.element()));
 
         dataCtrls.add( labelKezdo );
-        dataCtrls.add( lbKezdo );
+        dataCtrls.add( new Elemental2Widget<>(lbKezdo.element()) );
 
-        startStop.add( btnStart );
-        btnStop.setEnabled(false);
-        startStop.add( btnStop );
+        startStop.add( new Elemental2Widget<>(btnStart.element()) );
+        btnStop.disable();
+        startStop.add( new Elemental2Widget<>(btnStop.element()) );
         dataCtrls.add( startStop );
 
         dataCtrls.add( labelAllas );
@@ -103,12 +108,11 @@ public class AmobaDataPanel
         jatekAllas.add( lblAllasKpont );
         jatekAllas.add( lblAllasZold );
         jatekAllas.add(lblHelytarto);
-        jatekAllas.add(btnNullaz);
+        jatekAllas.add(new Elemental2Widget<>(btnNullaz.element()));
 
         dataCtrls.add( lblTFakt );
-        tamadasFaktor.setWidth("40");
-        tamadasFaktor.setText("4");
-        dataCtrls.add( tamadasFaktor );
+        tamadasFaktor.value("4");
+        dataCtrls.add( new Elemental2Widget<>(tamadasFaktor.element()) );
 
         dataCtrls.add( labelMsg );
         dataCtrls.add( lblImre );
@@ -116,10 +120,10 @@ public class AmobaDataPanel
         dataCtrls.add( html );
 
         //A modell inicializálása
-        amobaModell.setParameters(lbLFPiros.getValue(lbLFPiros.getSelectedIndex()),
-                                  lbLFZold.getValue(lbLFZold.getSelectedIndex()),
-                                  lbKezdo.getValue(lbKezdo.getSelectedIndex()),
-                                  tamadasFaktor.getText() );
+        amobaModell.setParameters(lbLFPiros.getValue(),
+                                  lbLFZold.getValue(),
+                                  lbKezdo.getValue(),
+                                  tamadasFaktor.getValue() );
 
         //////////////////
         // Eseménykezelők
@@ -128,55 +132,43 @@ public class AmobaDataPanel
         //
         // Nullázza a tabellát 0 : 0 -ra
         //
-        btnNullaz.addClickHandler(new ClickHandler()
+        btnNullaz.addClickListener(evt ->
         {
-            @Override
-            public void onClick(ClickEvent event)
-            {
-                amobaModell.zoldPontjai = amobaModell.pirosPontjai = 0;
-                lblAllasZold.setText(  "" + amobaModell.zoldPontjai );
-                lblAllasPiros.setText( "" + amobaModell.pirosPontjai );
-            }
+            amobaModell.zoldPontjai = amobaModell.pirosPontjai = 0;
+            lblAllasZold.setText(  "" + amobaModell.zoldPontjai );
+            lblAllasPiros.setText( "" + amobaModell.pirosPontjai );
         });
 
         //
         // Elkezd egy új Amőba játékot
         //
-        btnStart.addClickHandler(new ClickHandler()
+        btnStart.addClickListener(evt ->
         {
-            @Override
-            public void onClick(ClickEvent event)
-            {
-                amobaModell.setParameters(lbLFPiros.getValue(lbLFPiros.getSelectedIndex()),
-                          lbLFZold.getValue(lbLFZold.getSelectedIndex()),
-                          lbKezdo.getValue(lbKezdo.getSelectedIndex()),
-                          tamadasFaktor.getText() );
+            amobaModell.setParameters(lbLFPiros.getValue(),
+                      lbLFZold.getValue(),
+                      lbKezdo.getValue(),
+                      tamadasFaktor.getValue() );
 
-                amobaModell.setAmobaGame();
-                amobaModell.amoba.GameOver=false;
-                amobaModell.amoba.GameStop=false;
-                btnStop.setEnabled(true);
-                btnStart.setEnabled(false);
-                amobaModell.startedByStartBtn = true;
-                labelMsg.setText("Started... ");
-                makeComputerSteps();
-            }
+            amobaModell.setAmobaGame();
+            amobaModell.amoba.GameOver=false;
+            amobaModell.amoba.GameStop=false;
+            btnStop.enable();
+            btnStart.disable();
+            amobaModell.startedByStartBtn = true;
+            labelMsg.setText("Started... ");
+            makeComputerSteps();
         });
 
         //
         //
         //
-        btnStop.addClickHandler(new ClickHandler()
+        btnStop.addClickListener(evt ->
         {
-            @Override
-            public void onClick(ClickEvent event)
-            {
-                amobaModell.amoba.GameStop = true;
-                btnStop.setEnabled(false);
-                btnStart.setEnabled(true);
-                amobaModell.startedByStartBtn = false;
-                resetAmobaView();
-            }
+            amobaModell.amoba.GameStop = true;
+            btnStop.disable();
+            btnStart.enable();
+            amobaModell.startedByStartBtn = false;
+            resetAmobaView();
         });
 
     } // end konstruktor
